@@ -1,3 +1,13 @@
+.banner {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;  
+    color: #121212a1;
+    font-size: 20px;
+    text-align: center;
+    background-color: #e7c8b8;  
+}
+
+
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;

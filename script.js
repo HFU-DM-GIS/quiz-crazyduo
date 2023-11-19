@@ -4,11 +4,7 @@ const quizData = [
         options: ["Berlin", "Madrid", "Paris", "Rome"],
         correctAnswer: "Paris"
     },
-    {
-        question: "Which planet is known as the Red Planet?",
-        options: ["Earth", "Mars", "Venus", "Jupiter"],
-        correctAnswer: "Mars"
-    },
+   
     // Add more questions as needed
 ];
 
