@@ -2,24 +2,65 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;  
     color: #121212a1;
     font-size: 20px;
-    text-align: center;
+    text-align:center;
     background-color: #e7c8b8;  
 }
+nav ul {
+    list-style: none;
+    width: 100vw;
+    text-align: center;
+}
+nav li{
+    display: inline; /* damit kein Zeilenumbruch erfolgt - Auflistung nebeneinander */
+    margin: 0 15px /*Außenabstand 0px: kein vertikaler Abstand vorhanden, 15px: horizontaler Abstand*/
+}
+nav a{
+    text-decoration: none; /* Standardunterstreichung der links wird entfernt */
+    color: #121212a1;
+}
+nav a:hover {
+    text-decoration: underline; /*Unterstrich wenn man mit der Maus darüber fährt */
+}
+header{ /*Main HTML */
+    background-color:#bd9988b8;
+    color: #121212a1;
+    padding: 10px 0; /*Innenabstand */
+    text-align: center;
+    border: none;
+}
 
+a{ 
+    text-decoration: none; /* Standardunterstreichung von Links entfernen */
+    color: #121212a1;/* Farbe vom Text */
+    font-weight: bold; /* Fettdruck für Links */
+    margin-right: 30px; /* Horizontaler Abstand zwischen den Links*/
+    font-family: Arial, Helvetica, sans-serif;
+}
+a:hover {
+    text-decoration: underline; /* Unterstrich, wenn man mit der Maus darüber "fährt" */
+    color: #121212a1; 
 
-
+}
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
+    background-color: #e7c8b8;
     margin: 0;
-    display: flex;
+    text-align: center;
     align-items: center;
     justify-content: center;
     height: 100vh;
 }
 
+
+
+
+
+
+
+
+
 #quiz-container {
-    background-color: #fff;
+    background-color: #e7c8b8;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
