@@ -79,6 +79,7 @@ function selectOption(event) {
 
     if (selectedOption === currentQuizData.correctAnswer) {
         score++;
+        resultElement.textContent = "Herzlichen Glückwunsch! Du hast die Frage richtig beantwortet.";
     } else {
         resultElement.textContent = `Leider falsch! Die richtige Antwort ist ${currentQuizData.correctAnswer}.`;
     }
