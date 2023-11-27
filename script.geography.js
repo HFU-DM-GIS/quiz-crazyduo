@@ -113,5 +113,6 @@ function checkAnswer() {
     }
 }
 
+
 // Initial load
 loadQuestion();
