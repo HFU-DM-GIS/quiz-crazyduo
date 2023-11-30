@@ -1,17 +1,20 @@
 const apiUrl = "https://opentdb.com/api.php?amount=20&category=11&type=multiple";
 
-let quizData = [];
-let currentQuestion = 0;
-let score = 0;
+// Diese Variablen werden verwendet um den aktuellen Zustand des Quiz zu prüfen
+let quizData = []; 
+let currentQuestion = 0; 
+let score = 0; 
 
 const questionElement = document.getElementById('question');
 const optionsContainer = document.getElementById('options-container');
 const resultElement = document.getElementById('result');
 
-async function fetchQuizData() {
+async function fetchQuizData() { //fetch-Funktion um die Fragen von der API abzurufen
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
+       console.log(response);
+       console.log(data);
         quizData = formatQuizData(data.results);
         loadQuestion();
     } catch (error) {
@@ -19,7 +22,7 @@ async function fetchQuizData() {
     }
 }
 
-function formatQuizData(apiData) {
+function formatQuizData(apiData) {  //Daten von der API werden umgewandelt in das Quizformat
     return apiData.map(apiQuestion => {
         const formattedQuestion = {
             question: apiQuestion.question,
@@ -30,14 +33,15 @@ function formatQuizData(apiData) {
     });
 }
 
-function loadQuestion() {
+function loadQuestion() { //Frage aufzurufen
     const currentQuizData = quizData[currentQuestion];
-    questionElement.textContent = currentQuizData.question;
+   let question =  currentQuizData.question.replaceAll('&quot;','\"').replaceAll('&rsquo;','\'').replaceAll('&#039;','\'');
+    questionElement.textContent = question;
 
     optionsContainer.innerHTML = "";
     currentQuizData.options.forEach((option, index) => {
         const button = document.createElement('button');
-        button.textContent = option;
+        button.textContent = option.replaceAll('&quot;','\"').replaceAll('&rsquo;','\'').replaceAll('&#039;','\'');
         button.classList.add('option-btn');
         button.setAttribute('data-index', index);
         button.addEventListener('click', selectOption);
@@ -45,7 +49,7 @@ function loadQuestion() {
     });
 }
 
-function selectOption(event) {
+function selectOption(event) {  //Wird aufgerufen, wenn eine Antwort ausgewählt wird und prüft, ob die Antwort richtig oder falsch ist
     const selectedOption = event.target.textContent;
     const currentQuizData = quizData[currentQuestion];
 
@@ -53,7 +57,7 @@ function selectOption(event) {
         score++;
         resultElement.textContent = "Herzlichen Glückwunsch! Du hast die Frage richtig beantwortet.";
     } else {
-        resultElement.textContent = `Leider falsch! Die richtige Antwort ist ${currentQuizData.correctAnswer}.`;
+        resultElement.textContent = "Leider falsch! Die richtige Antwort ist ${currentQuizData.correctAnswer}.";
     }
 
     // Disable options after selecting one
@@ -67,7 +71,7 @@ function selectOption(event) {
     document.getElementById('submit-btn').style.display = 'block';
 }
 
-function checkAnswer() {
+function checkAnswer() { //Zeigt die Anzahl der richtigen Antworten an
     const currentQuizData = quizData[currentQuestion];
 
     const resultText = (score === quizData.length) ? "Herzlichen Glückwunsch! Du hast alle Fragen richtig beantwortet!" : `Du hast ${score} von ${quizData.length} Fragen richtig beantwortet.`;
