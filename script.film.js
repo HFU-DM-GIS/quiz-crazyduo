@@ -35,13 +35,13 @@ function formatQuizData(apiData) {  //Daten von der API werden umgewandelt in da
 
 function loadQuestion() { //Frage aufzurufen
     const currentQuizData = quizData[currentQuestion];
-   let question =  currentQuizData.question.replaceAll('&quot;','\"').replaceAll('&rsquo;','\'').replaceAll('&#039;','\'');
+   let question =  currentQuizData.question.replaceAll('&quot;','\"').replaceAll('&rsquo;','\'').replaceAll('&#039;','\'').replaceAll('&amp;','');
     questionElement.textContent = question;
 
     optionsContainer.innerHTML = "";
     currentQuizData.options.forEach((option, index) => {
         const button = document.createElement('button');
-        button.textContent = option.replaceAll('&quot;','\"').replaceAll('&rsquo;','\'').replaceAll('&#039;','\'');
+        button.textContent = option.replaceAll('&quot;','\"').replaceAll('&rsquo;','\'').replaceAll('&#039;','\'').replaceAll('&ntilde;&aacute','ñá');
         button.classList.add('option-btn');
         button.setAttribute('data-index', index);
         button.addEventListener('click', selectOption);
@@ -57,7 +57,7 @@ function selectOption(event) {  //Wird aufgerufen, wenn eine Antwort ausgewählt
         score++;
         resultElement.textContent = "Herzlichen Glückwunsch! Du hast die Frage richtig beantwortet.";
     } else {
-        resultElement.textContent = "Leider falsch! Die richtige Antwort ist ${currentQuizData.correctAnswer}.";
+        resultElement.textContent = `Leider falsch! Die richtige Antwort ist ${currentQuizData.correctAnswer}.`;
     }
 
     // Disable options after selecting one
