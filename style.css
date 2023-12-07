@@ -5,6 +5,9 @@
     text-align:center;
     background-color: #e7c8b8;  
 }
+ul {
+    list-style: none;
+}
 nav ul {
     list-style: none;
     width: 100vw;

@@ -1,1 +1,0 @@
-const apiUrl = "https://opentdb.com/api.php?amount=20&category=21&type=multiple";
