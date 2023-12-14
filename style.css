@@ -2,8 +2,7 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;  
     color: #121212a1;
     font-size: 20px;
-    text-align:center;
-    background-color: #e7c8b8;  
+    text-align:center; 
 }
 ul {
     list-style: none;
@@ -25,7 +24,7 @@ nav a:hover {
     text-decoration: underline; /*Unterstrich wenn man mit der Maus darüber fährt */
 }
 header{ /*Main HTML */
-    background-color:#bd9988b8;
+    background-color:#7e9fbb;
     color: #121212a1;
     padding: 10px 0; /*Innenabstand */
     text-align: center;
@@ -46,7 +45,7 @@ a:hover {
 }
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif; 
-    background-color: #e7c8b8;
+    background-color: #9fbacf;
     margin: 0;
     text-align: center;
     align-items: center;
@@ -57,17 +56,13 @@ body {
 
 
 
-
-
-
-
-
 #quiz-container {
-    background-color: #e7c8b8;
+    background-color: #95b3ce;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    
 }
 
 .btn-container {
