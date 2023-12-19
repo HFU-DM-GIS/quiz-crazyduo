@@ -1,3 +1,7 @@
+document.addEventListener("DOMContentLoaded", function () {
+  checkUrl();
+});
+
 function checkUrl() {
   var url = window.location.href;
   var apiUrl;
@@ -21,7 +25,6 @@ function checkUrl() {
   }
   console.log("API-URL: " + apiUrl);
 
-  // Diese Variablen werden verwendet um den aktuellen Zustand des Quiz zu prüfen
   let quizData = [];
   let currentQuestion = 0;
   let score = 0;
@@ -29,9 +32,39 @@ function checkUrl() {
   const questionElement = document.getElementById("question");
   const optionsContainer = document.getElementById("options-container");
   const resultElement = document.getElementById("result");
+  const timerElement = document.getElementById("timer");
+
+  if (!timerElement) {
+    console.log("Timer-Element nicht gefunden");
+    return;
+  }
+
+  let timerSeconds = 30;
+  let timerInterval;
+
+  function startTimer() {
+    timerInterval = setInterval(function () {
+      timerElement.textContent = `Die Zeit läuft: ${timerSeconds} Sekunden`;
+
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        // Wenn der Timer abgelaufen ist, rufe die Funktion auf, um die Frage als falsch zu bewerten
+        checkAnswer();
+      } else {
+        timerSeconds--; // Dekrementiere den Timer nur, wenn er größer als 0 ist
+      }
+    }, 1000); // 1000 Millisekunden entsprechen 1 Sekunde
+    
+    // Stellen Sie sicher, dass der Timer zuerst korrekt aktualisiert wird, bevor er auf 0 gesetzt wird
+    timerElement.textContent = `Die Zeit läuft: ${timerSeconds} Sekunden`;
+
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+  }
 
   async function fetchQuizData() {
-    //fetch-Funktion um die Fragen von der API abzurufen
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
@@ -45,7 +78,6 @@ function checkUrl() {
   }
 
   function formatQuizData(apiData) {
-    //Daten von der API werden umgewandelt in das Quizformat
     return apiData.map((apiQuestion) => {
       const formattedQuestion = {
         question: apiQuestion.question,
@@ -57,109 +89,103 @@ function checkUrl() {
   }
 
   function loadQuestion() {
-    //Frage aufzurufen
     const currentQuizData = quizData[currentQuestion];
-    let question = currentQuizData.question
-      .replaceAll("&quot;", '"')
-      .replaceAll("&rsquo;", "'")
-      .replaceAll("&#039;", "'")
-      .replaceAll("&amp;", "");
+    let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll");
 
     questionElement.textContent = question;
 
     optionsContainer.innerHTML = "";
     currentQuizData.options.forEach((option, index) => {
       const button = document.createElement("button");
-      button.textContent = option
-        .replaceAll("&quot;", '"')
-        .replaceAll("&rsquo;", "'")
-        .replaceAll("&#039;", "'")
-        .replaceAll("&ntilde;&aacute", "ñá")
-        .replaceAll ("&aring;", "å")
-        .replaceAll ("&amp;", "");
+      button.textContent = option.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&ntilde;&aacute", "ñá").replaceAll("&aring;", "å").replaceAll("&amp;", "").replaceAll("&ouml;","ö");
       button.classList.add("option-btn");
       button.setAttribute("data-index", index);
       button.addEventListener("click", selectOption);
       optionsContainer.appendChild(button);
     });
+
+    // Überprüfen Sie, ob timerElement gefunden wurde
+    const timerElement = document.getElementById("timer");
+    if (!timerElement) {
+      console.error("Timer-Element nicht gefunden");
+      return;
+    }
+
+    // Timer zurücksetzen und stoppen
+    timerSeconds = 30;
+    stopTimer();
+
+    // Starten Sie den Timer, wenn das Dokument vollständig geladen wurde
+    startTimer();
   }
 
   function selectOption(event) {
-    //Wird aufgerufen, wenn eine Antwort ausgewählt wird und prüft, ob die Antwort richtig oder falsch ist
     const selectedOption = event.target.textContent;
     const currentQuizData = quizData[currentQuestion];
 
     if (selectedOption === currentQuizData.correctAnswer) {
       score++;
-      resultElement.textContent =
-        "Herzlichen Glückwunsch! Du hast die Frage richtig beantwortet.";
+      resultElement.textContent = "Herzlichen Glückwunsch! Du hast die Frage richtig beantwortet.";
     } else {
       resultElement.textContent = `Leider falsch! Die richtige Antwort ist ${currentQuizData.correctAnswer}.`;
     }
 
-    // Disable options after selecting one
+    stopTimer();
+
     const optionButtons = document.querySelectorAll(".option-btn");
     optionButtons.forEach((button) => {
       button.removeEventListener("click", selectOption);
       button.disabled = true;
     });
 
-    // Show submit button after selecting an option
     document.getElementById("submit-btn").style.display = "block";
     document.getElementById("submit-btn").addEventListener('click', checkAnswer);
   }
 
   function checkAnswer() {
-    //Zeigt die Anzahl der richtigen Antworten an
+    stopTimer();
+
     const currentQuizData = quizData[currentQuestion];
 
-    const resultText =
-      score === quizData.length
-        ? "Herzlichen Glückwunsch! Du hast alle Fragen richtig beantwortet!"
-        : `Du hast ${score} von ${quizData.length} Fragen richtig beantwortet.`;
+    const resultText = score === quizData.length
+      ? "Herzlichen Glückwunsch! Du hast alle Fragen richtig beantwortet!"
+      : `Du hast ${score} von ${quizData.length} Fragen richtig beantwortet.`;
 
     resultElement.textContent = resultText;
 
-    // Show next question or quiz result
     if (currentQuestion < quizData.length - 1) {
       currentQuestion++;
       loadQuestion();
       document.getElementById("submit-btn").style.display = "none";
     } else {
-      // Clear question and options, show thank you message
       loadThankYouScreen();
     }
   }
 
   function loadThankYouScreen() {
-    // Anzeigen des Dankes-Texts und der Ja/Nein-Buttons
     questionElement.textContent = "Vielen Dank für deine Teilnahme am Quiz. Möchtest du noch eine weitere Kategorie ausprobieren?";
-    resultElement.textContent = ""; // Leeren Sie das Resultat-Element
+    resultElement.textContent = "";
 
     optionsContainer.innerHTML = "";
 
-    // Erstellen der Ja/Nein-Buttons
     const yesButton = document.createElement("button");
     yesButton.textContent = "Ja";
     yesButton.classList.add("option-btn");
-    yesButton.addEventListener("click", startNewQuiz); // Funktion für Ja-Button
+    yesButton.addEventListener("click", startNewQuiz);
 
     const noButton = document.createElement("button");
     noButton.textContent = "Nein";
     noButton.classList.add("option-btn");
     noButton.addEventListener("click", function () {
-      // Funktion für Nein-Button
       console.log("Vielen Dank für die Teilnahme!");
       window.location.href = "quiz.beendet.html";
     });
 
-    // Fügen Sie die Buttons dem Options-Container hinzu
     optionsContainer.appendChild(yesButton);
     optionsContainer.appendChild(noButton);
   }
 
   function startNewQuiz() {
-   //Wechsel Kategorie Seite, beim drücken vom Button "Ja"
     console.log("Neues Quiz starten oder zu einer anderen Kategorie wechseln");
     window.location.href = "category.html";
   }
@@ -168,7 +194,8 @@ function checkUrl() {
   fetchQuizData();
 }
 
-checkUrl();
-
-// Add an event listener for hashchange to update apiUrl dynamically
-window.addEventListener("hashchange", checkUrl);
+// Fügen Sie einen Event-Listener für das DOMContentLoaded-Ereignis hinzu
+document.addEventListener("DOMContentLoaded", function () {
+  // Rufen Sie Ihre Funktion checkUrl auf, wenn das DOM vollständig geladen ist
+  checkUrl();
+});
