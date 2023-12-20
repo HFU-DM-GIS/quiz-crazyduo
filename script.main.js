@@ -97,7 +97,7 @@ function checkUrl() {
     optionsContainer.innerHTML = "";
     currentQuizData.options.forEach((option, index) => {
       const button = document.createElement("button");
-      button.textContent = option.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&ntilde;&aacute", "ñá").replaceAll("&aring;", "å").replaceAll("&amp;", "").replaceAll("&ouml;","ö");
+      button.textContent = option.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&ntilde;&aacute", "ñá").replaceAll("&aring;", "å").replaceAll("&amp;", "").replaceAll("&ouml;","ö").replaceAll("&oacute;n","ó");
       button.classList.add("option-btn");
       button.setAttribute("data-index", index);
       button.addEventListener("click", selectOption);
@@ -167,6 +167,7 @@ function checkUrl() {
     resultElement.textContent = "";
 
     optionsContainer.innerHTML = "";
+    timerElement.style.display = "none";
 
     const yesButton = document.createElement("button");
     yesButton.textContent = "Ja";
