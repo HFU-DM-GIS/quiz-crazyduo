@@ -35,7 +35,7 @@ function checkUrl() {
   const timerElement = document.getElementById("timer");
 
   if (!timerElement) {
-    console.log("Timer-Element nicht gefunden");
+    console.error("Timer-Element nicht gefunden");
     return;
   }
 
@@ -55,9 +55,8 @@ function checkUrl() {
       }
     }, 1000); // 1000 Millisekunden entsprechen 1 Sekunde
     
-    // Stellen Sie sicher, dass der Timer zuerst korrekt aktualisiert wird, bevor er auf 0 gesetzt wird
+    // Sicherstellung, dass der Timer zuerst korrekt aktualisiert wird, bevor er auf 0 gesetzt wird
     timerElement.textContent = `Die Zeit läuft: ${timerSeconds} Sekunden`;
-
   }
 
   function stopTimer() {
@@ -90,7 +89,7 @@ function checkUrl() {
 
   function loadQuestion() {
     const currentQuizData = quizData[currentQuestion];
-    let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll");
+    let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö");
 
     questionElement.textContent = question;
 
@@ -120,6 +119,7 @@ function checkUrl() {
   }
 
   function selectOption(event) {
+    stopTimer();  // Timer stoppen, wenn eine Antwort ausgewählt wurde
     const selectedOption = event.target.textContent;
     const currentQuizData = quizData[currentQuestion];
 
@@ -130,14 +130,14 @@ function checkUrl() {
       resultElement.textContent = `Leider falsch! Die richtige Antwort ist ${currentQuizData.correctAnswer}.`;
     }
 
-    stopTimer();
-
+    // Alle Optionsbutton deaktivieren, sobald eine Antwort ausgewählt wurde, um weitere Klicks zu verhindern
     const optionButtons = document.querySelectorAll(".option-btn");
     optionButtons.forEach((button) => {
       button.removeEventListener("click", selectOption);
       button.disabled = true;
     });
 
+    // Bestätigungsbutton anzeigen und EventListener wird hinzugefügt um die Antwort zu überprüfen
     document.getElementById("submit-btn").style.display = "block";
     document.getElementById("submit-btn").addEventListener('click', checkAnswer);
   }
@@ -195,8 +195,4 @@ function checkUrl() {
   fetchQuizData();
 }
 
-// Fügen Sie einen Event-Listener für das DOMContentLoaded-Ereignis hinzu
-document.addEventListener("DOMContentLoaded", function () {
-  // Rufen Sie Ihre Funktion checkUrl auf, wenn das DOM vollständig geladen ist
-  checkUrl();
-});
+
