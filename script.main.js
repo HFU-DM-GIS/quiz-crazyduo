@@ -48,8 +48,8 @@ function checkUrl() {
 
       if (timerSeconds <= 0) {
         clearInterval(timerInterval);
-        // Wenn der Timer abgelaufen ist, rufe die Funktion auf, um die Frage als falsch zu bewerten
-        checkAnswer();
+        //Beim Aufruf der nächsten Frage
+        loadNextQuestion();
       } else {
         timerSeconds--; // Dekrementiere den Timer nur, wenn er größer als 0 ist
       }
@@ -70,7 +70,7 @@ function checkUrl() {
       console.log(response);
       console.log(data);
       quizData = formatQuizData(data.results);
-      loadQuestion();
+      displayQuiz();
     } catch (error) {
       console.error("Error fetching quiz data:", error);
     }
@@ -87,7 +87,7 @@ function checkUrl() {
     });
   }
 
-  function loadQuestion() {
+  function displayQuiz() {
     const currentQuizData = quizData[currentQuestion];
     let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö");
 
@@ -99,16 +99,9 @@ function checkUrl() {
       button.textContent = option.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&ntilde;&aacute", "ñá").replaceAll("&aring;", "å").replaceAll("&amp;", "").replaceAll("&ouml;","ö").replaceAll("&oacute;n","ó");
       button.classList.add("option-btn");
       button.setAttribute("data-index", index);
-      button.addEventListener("click", selectOption);
+      button.addEventListener("click", checkAnswer);
       optionsContainer.appendChild(button);
     });
-
-    // Überprüfen Sie, ob timerElement gefunden wurde
-    const timerElement = document.getElementById("timer");
-    if (!timerElement) {
-      console.error("Timer-Element nicht gefunden");
-      return;
-    }
 
     // Timer zurücksetzen und stoppen
     timerSeconds = 30;
@@ -118,7 +111,7 @@ function checkUrl() {
     startTimer();
   }
 
-  function selectOption(event) {
+  function checkAnswer(event) {
     stopTimer();  // Timer stoppen, wenn eine Antwort ausgewählt wurde
     const selectedOption = event.target.textContent;
     const currentQuizData = quizData[currentQuestion];
@@ -133,16 +126,15 @@ function checkUrl() {
     // Alle Optionsbutton deaktivieren, sobald eine Antwort ausgewählt wurde, um weitere Klicks zu verhindern
     const optionButtons = document.querySelectorAll(".option-btn");
     optionButtons.forEach((button) => {
-      button.removeEventListener("click", selectOption);
+      button.removeEventListener("click", checkAnswer);
       button.disabled = true;
     });
 
-    // Bestätigungsbutton anzeigen und EventListener wird hinzugefügt um die Antwort zu überprüfen
     document.getElementById("submit-btn").style.display = "block";
-    document.getElementById("submit-btn").addEventListener('click', checkAnswer);
+    document.getElementById("submit-btn").addEventListener('click', loadNextQuestion);
   }
 
-  function checkAnswer() {
+  function loadNextQuestion() {
     stopTimer();
 
     const currentQuizData = quizData[currentQuestion];
@@ -155,7 +147,7 @@ function checkUrl() {
 
     if (currentQuestion < quizData.length - 1) {
       currentQuestion++;
-      loadQuestion();
+      displayQuiz();
       document.getElementById("submit-btn").style.display = "none";
     } else {
       loadThankYouScreen();
