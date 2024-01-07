@@ -48,8 +48,7 @@ function checkUrl() {
 
       if (timerSeconds <= 0) {
         clearInterval(timerInterval);
-        //Beim Aufruf der nächsten Frage
-        loadNextQuestion();
+        result();
       } else {
         timerSeconds--; // Dekrementiere den Timer nur, wenn er größer als 0 ist
       }
@@ -131,10 +130,10 @@ function checkUrl() {
     });
 
     document.getElementById("submit-btn").style.display = "block";
-    document.getElementById("submit-btn").addEventListener('click', loadNextQuestion);
+    document.getElementById("submit-btn").addEventListener('click', result);
   }
 
-  function loadNextQuestion() {
+  function result() {
     stopTimer();
 
     const currentQuizData = quizData[currentQuestion];
@@ -176,6 +175,9 @@ function checkUrl() {
 
     optionsContainer.appendChild(yesButton);
     optionsContainer.appendChild(noButton);
+
+    //Button verstecken
+    document.getElementById("submit-btn").style.display= "none";
   }
 
   function startNewQuiz() {
