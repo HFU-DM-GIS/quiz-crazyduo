@@ -10,3 +10,17 @@ This is an implementation of a quiz game. The initial source code has been gener
 ### Extensions
 - Add a timer for the questions and sum up a score.
 - Grab random questions from a public API.
+
+
+Remarks and Codereview (LH 2024-01-07)
+- The code exhibits some positive aspects but has room for improvement. Pay attention to the points mentioned below to enhance code readability, maintainability, and security.
+- The game in general is fun until you notice, that the fourth option is always the right answer.
+- Improve the game play by shuffling the answers
+- Add comments to explain more complex parts of the code, especially where the logic may not be immediately apparent. This enhances understanding for others/your future self.
+- Consider improving error handling in the fetchQuizData section. Currently, only an error message is logged. You could also display an appropriate message to the user on the page.
+- When logging to the console, consider not only outputting variables but also providing meaningful context to maintain clarity.
+- Avoid placing API URLs directly in plaintext in the code. In a production environment, such sensitive information should be handled securely.
+- Ensure consistency in the naming of functions. There is a small typo: loadCategor should probably be loadCategory (index.html:13).
+- Consider creating a general function for string cleanup to enhance readability and promote the DRY (Don't Repeat Yourself) principle.
+- Consider whether URL generation based on the category can be made more dynamic to improve maintainability.
+- Avoid using inline event handlers like onclick directly in HTML. This can lead to issues with the separation of markup and logic. Instead, dynamically add event listeners in JavaScript.
