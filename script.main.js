@@ -79,12 +79,27 @@ function checkUrl() {
     return apiData.map((apiQuestion) => {
       const formattedQuestion = {
         question: apiQuestion.question,
-        options: [...apiQuestion.incorrect_answers, apiQuestion.correct_answer],
+        options: shuffle([...apiQuestion.incorrect_answers, apiQuestion.correct_answer]),
         correctAnswer: apiQuestion.correct_answer,
       };
       return formattedQuestion;
     });
   }
+  
+  // Hilfsfunktion zum Mischen eines Arrays (Fisher-Yates Algorithmus)
+  function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+  
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+  }
+  
 
   function displayQuiz() {
     const currentQuizData = quizData[currentQuestion];
