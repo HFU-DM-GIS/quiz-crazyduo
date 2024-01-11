@@ -7,6 +7,8 @@ function checkUrl() {
   var apiUrl;
 
   switch (true) {
+    //Verwende "includes()" anstelle von "indexOf()" für bessere Lesbarkeit
+    //Vermeide das direkte Platzieren von API-URLs im Klartext im Code
     case url.indexOf("geography") > -1:
       apiUrl = "https://opentdb.com/api.php?amount=10&category=22&type=multiple";
       break;
@@ -38,7 +40,7 @@ function checkUrl() {
     console.error("Timer-Element nicht gefunden");
     return;
   }
-
+//Deklaration der Timer-Variablen kann direkt in der Funktion checkUrl erfolgen
   let timerSeconds = 30;
   let timerInterval;
 
@@ -150,7 +152,7 @@ function checkUrl() {
 
   function result() {
     stopTimer();
-
+    //currentQuizData wird deklariert, aber nicht benutzt
     const currentQuizData = quizData[currentQuestion];
 
     const resultText = score === quizData.length
@@ -191,6 +193,7 @@ function checkUrl() {
     optionsContainer.appendChild(yesButton);
     optionsContainer.appendChild(noButton);
 
+    //Besser wäre es, den Button standardmäßig ausgeblendet zu haben
     //Button verstecken
     document.getElementById("submit-btn").style.display= "none";
   }
