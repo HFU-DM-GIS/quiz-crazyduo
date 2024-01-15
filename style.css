@@ -87,3 +87,8 @@ button {
     font-weight: bold;
     margin-top: 10px;
 }
+
+ #error-message {
+    color: darkblue;
+    display: none;
+}

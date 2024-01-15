@@ -2,34 +2,42 @@ document.addEventListener("DOMContentLoaded", function () {
   checkUrl();
 });
 
+const apiUrls = {
+  geography: "https://opentdb.com/api.php?amount=10&category=22&type=multiple",
+  film: "https://opentdb.com/api.php?amount=10&category=11&type=multiple",
+  sport: "https://opentdb.com/api.php?amount=10&category=21&type=multiple",
+  allgemeinwissen: "https://opentdb.com/api.php?amount=10&category=9&type=multiple",
+};
+
 function checkUrl() {
   var url = window.location.href;
   var apiUrl;
-
-  switch (true) {
-    //Verwende "includes()" anstelle von "indexOf()" für bessere Lesbarkeit
-    //Vermeide das direkte Platzieren von API-URLs im Klartext im Code
-    case url.indexOf("geography") > -1:
-      apiUrl = "https://opentdb.com/api.php?amount=10&category=22&type=multiple";
-      break;
-    case url.indexOf("film") > -1:
-      apiUrl = "https://opentdb.com/api.php?amount=10&category=11&type=multiple";
-      break;
-    case url.indexOf("sport") > -1:
-      apiUrl = "https://opentdb.com/api.php?amount=10&category=21&type=multiple";
-      break;
-    case url.indexOf("allgemeinwissen") > -1:
-      apiUrl = "https://opentdb.com/api.php?amount=10&category=9&type=multiple";
-      break;
-    default:
-      console.error("Ungültige Kategorie");
-      return;
-  }
-  console.log("API-URL: " + apiUrl);
+  
+    switch (true) {
+      case url.includes("geography"):
+        apiUrl = apiUrls.geography;
+        break;
+      case url.includes("film"):
+        apiUrl = apiUrls.film;
+        break;
+      case url.includes("sport"):
+        apiUrl = apiUrls.sport;
+        break;
+      case url.includes("allgemeinwissen"):
+        apiUrl = apiUrls.allgemeinwissen;
+        break;
+      default:
+        console.error("Ungültige Url");
+        return;
+    }
+    console.log("API-URL festgelegt: " + apiUrl);
+    
 
   let quizData = [];
   let currentQuestion = 0;
   let score = 0;
+  let timerSeconds = 30;
+  let timerInterval;
 
   const questionElement = document.getElementById("question");
   const optionsContainer = document.getElementById("options-container");
@@ -40,9 +48,6 @@ function checkUrl() {
     console.error("Timer-Element nicht gefunden");
     return;
   }
-//Deklaration der Timer-Variablen kann direkt in der Funktion checkUrl erfolgen
-  let timerSeconds = 30;
-  let timerInterval;
 
   function startTimer() {
     timerInterval = setInterval(function () {
@@ -63,17 +68,25 @@ function checkUrl() {
   function stopTimer() {
     clearInterval(timerInterval);
   }
+  // Event Listener hinzugefügt, um die Fehlermeldung bei Klick auszublenden
+  document.getElementById("error-message").addEventListener("click", function () {
+  this.style.display = "none";
+  });
 
   async function fetchQuizData() {
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
-      console.log(response);
-      console.log(data);
+      console.log("API Response:", response);
+      console.log("Quiz Data:", data);
       quizData = formatQuizData(data.results);
       displayQuiz();
     } catch (error) {
-      console.error("Error fetching quiz data:", error);
+      console.error("Fehler beim Abrufen der Quizdaten:", error);
+
+       // Fehlermeldung für den Besucher anzeigen, wenn die Quizdaten nicht abgerufen werden können
+       const errorMessageElement = document.getElementById("error-message");
+       errorMessageElement.style.display = "block";
     }
   }
 
@@ -105,7 +118,7 @@ function checkUrl() {
 
   function displayQuiz() {
     const currentQuizData = quizData[currentQuestion];
-    let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö");
+    let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö").replaceAll("&ldquo;The Iron Giant,&rdquo;","The Iron Giant");
 
     questionElement.textContent = question;
 
@@ -152,9 +165,7 @@ function checkUrl() {
 
   function result() {
     stopTimer();
-    //currentQuizData wird deklariert, aber nicht benutzt
-    const currentQuizData = quizData[currentQuestion];
-
+    
     const resultText = score === quizData.length
       ? "Herzlichen Glückwunsch! Du hast alle Fragen richtig beantwortet!"
       : `Du hast ${score} von ${quizData.length} Fragen richtig beantwortet.`;
@@ -193,7 +204,6 @@ function checkUrl() {
     optionsContainer.appendChild(yesButton);
     optionsContainer.appendChild(noButton);
 
-    //Besser wäre es, den Button standardmäßig ausgeblendet zu haben
     //Button verstecken
     document.getElementById("submit-btn").style.display= "none";
   }
