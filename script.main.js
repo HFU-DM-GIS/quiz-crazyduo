@@ -1,3 +1,4 @@
+// Event Listener für das DOMContentLoaded-Ereignis hinzugefügt
 document.addEventListener("DOMContentLoaded", function () {
   checkUrl();
 });
@@ -8,7 +9,7 @@ const apiUrls = {
   sport: "https://opentdb.com/api.php?amount=10&category=21&type=multiple",
   allgemeinwissen: "https://opentdb.com/api.php?amount=10&category=9&type=multiple",
 };
-
+// Funktion zur Überprüfung der URL
 function checkUrl() {
   var url = window.location.href;
   var apiUrl;
@@ -48,7 +49,7 @@ function checkUrl() {
     console.error("Timer-Element nicht gefunden");
     return;
   }
-
+// Funktion zum Starten des Timers
   function startTimer() {
     timerInterval = setInterval(function () {
       timerElement.textContent = `Die Zeit läuft: ${timerSeconds} Sekunden`;
@@ -64,7 +65,7 @@ function checkUrl() {
     // Sicherstellung, dass der Timer zuerst korrekt aktualisiert wird, bevor er auf 0 gesetzt wird
     timerElement.textContent = `Die Zeit läuft: ${timerSeconds} Sekunden`;
   }
-
+// Funktion zum Stoppen des Timers
   function stopTimer() {
     clearInterval(timerInterval);
   }
@@ -72,7 +73,7 @@ function checkUrl() {
   document.getElementById("error-message").addEventListener("click", function () {
   this.style.display = "none";
   });
-
+// Funktion zum Abrufen der Quizdaten
   async function fetchQuizData() {
     try {
       const response = await fetch(apiUrl);
@@ -115,7 +116,7 @@ function checkUrl() {
     return array;
   }
   
-
+// Funktion zum Anzeigen des Quiz
   function displayQuiz() {
     const currentQuizData = quizData[currentQuestion];
     let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö").replaceAll("&ldquo;The Iron Giant,&rdquo;","The Iron Giant");
@@ -139,7 +140,7 @@ function checkUrl() {
     // Starten Sie den Timer, wenn das Dokument vollständig geladen wurde
     startTimer();
   }
-
+// Funktion zur Überprüfung der Antwort
   function checkAnswer(event) {
     stopTimer();  // Timer stoppen, wenn eine Antwort ausgewählt wurde
     const selectedOption = event.target.textContent;
@@ -162,7 +163,7 @@ function checkUrl() {
     document.getElementById("submit-btn").style.display = "block";
     document.getElementById("submit-btn").addEventListener('click', result);
   }
-
+// Funktion zur Anzeige des Ergebnisses
   function result() {
     stopTimer();
     
@@ -180,7 +181,7 @@ function checkUrl() {
       loadThankYouScreen();
     }
   }
-
+// Funktion zum Laden des Dankeschön-Bildschirms
   function loadThankYouScreen() {
     questionElement.textContent = "Vielen Dank für deine Teilnahme am Quiz. Möchtest du noch eine weitere Kategorie ausprobieren?";
     resultElement.textContent = "";
@@ -207,7 +208,7 @@ function checkUrl() {
     //Button verstecken
     document.getElementById("submit-btn").style.display= "none";
   }
-
+// Funktion zum Starten eines neuen Quiz
   function startNewQuiz() {
     console.log("Neues Quiz starten oder zu einer anderen Kategorie wechseln");
     window.location.href = "category.html";
