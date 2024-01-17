@@ -64,11 +64,11 @@ function checkUrl() {
   function stopTimer() {
     clearInterval(timerInterval);
   }
-  // Event Listener hinzugefügt, um die Fehlermeldung bei Klick auszublenden
+  // Event Listener hinzugefügt
   document.getElementById("error-message").addEventListener("click", function () {
   this.style.display = "none";
   });
-// Funktion zum Abrufen der Quizdaten
+// Funktion zum Abrufen der Quizdaten - Hier beginnt das Spiel
   async function fetchQuizData() {
     try {
       const response = await fetch(apiUrl);
@@ -111,22 +111,33 @@ function checkUrl() {
     return array;
   }
   
-// Funktion zum Anzeigen des Quiz
-  function displayQuiz() {
-    const currentQuizData = quizData[currentQuestion];
-    let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö").replaceAll("&ldquo;The Iron Giant,&rdquo;","The Iron Giant");
+  //function cleanUp(){
 
-    questionElement.textContent = question;
 
-    optionsContainer.innerHTML = "";
-    currentQuizData.options.forEach((option, index) => {
-      const button = document.createElement("button");
-      button.textContent = option.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&ntilde;&aacute", "ñá").replaceAll("&aring;", "å").replaceAll("&amp;", "").replaceAll("&ouml;","ö").replaceAll("&oacute;n","ó");
-      button.classList.add("option-btn");
-      button.setAttribute("data-index", index);
-      button.addEventListener("click", checkAnswer);
-      optionsContainer.appendChild(button);
-    });
+   // currentQuizData = quizData[currentQuestion];
+    //question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö").replaceAll("&ldquo;The Iron Giant,&rdquo;","The Iron Giant");
+
+   // button = document.createElement("button");
+   // button.textContent = option.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&ntilde;&aacute", "ñá").replaceAll("&aring;", "å").replaceAll("&amp;", "").replaceAll("&ouml;","ö").replaceAll("&oacute;n","ó");
+
+  // }
+
+  // Funktion zum Anzeigen des Quiz
+function displayQuiz() {
+  const currentQuizData = quizData[currentQuestion];
+  let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö").replaceAll("&ldquo;The Iron Giant,&rdquo;","The Iron Giant");
+
+  questionElement.textContent = question;
+
+  optionsContainer.innerHTML = "";
+  currentQuizData.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.textContent = option.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&ntilde;&aacute", "ñá").replaceAll("&aring;", "å").replaceAll("&amp;", "").replaceAll("&ouml;","ö").replaceAll("&oacute;n","ó");
+    button.classList.add("option-btn");
+    button.setAttribute("data-index", index);
+    button.addEventListener("click", checkAnswer);
+    optionsContainer.appendChild(button);
+  });
 
     // Timer zurücksetzen und stoppen
     timerSeconds = 30;
@@ -140,6 +151,8 @@ function checkUrl() {
     stopTimer();  // Timer stoppen, wenn eine Antwort ausgewählt wurde
     const selectedOption = event.target.textContent;
     const currentQuizData = quizData[currentQuestion];
+
+    //Dieser Text wird nach jeder Antwort ausgewiesen
 
     if (selectedOption === currentQuizData.correctAnswer) {
       score++;
@@ -161,7 +174,8 @@ function checkUrl() {
 // Funktion zur Anzeige des Ergebnisses
   function result() {
     stopTimer();
-    
+
+    //Dieser Text wird am Ende der letzten Frage ausgewiesen
     const resultText = score === quizData.length
       ? "Herzlichen Glückwunsch! Du hast alle Fragen richtig beantwortet!"
       : `Du hast ${score} von ${quizData.length} Fragen richtig beantwortet.`;
@@ -176,7 +190,7 @@ function checkUrl() {
       loadThankYouScreen();
     }
   }
-// Funktion zum Laden des Dankeschön-Bildschirms
+// Nach einem Spielende (nach 10 Fragen) hat der Benutzer die Option weiter zu spielen oder das Spiel vollständig zu beenden
   function loadThankYouScreen() {
     questionElement.textContent = "Vielen Dank für deine Teilnahme am Quiz. Möchtest du noch eine weitere Kategorie ausprobieren?";
     resultElement.textContent = "";
@@ -200,7 +214,7 @@ function checkUrl() {
     optionsContainer.appendChild(yesButton);
     optionsContainer.appendChild(noButton);
 
-    //Button verstecken
+    //Button "Nächste Frage" verstecken
     document.getElementById("submit-btn").style.display= "none";
   }
 // Funktion zum Starten eines neuen Quiz
