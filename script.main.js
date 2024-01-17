@@ -1,13 +1,9 @@
+import {apiUrls} from './api.url.js';
+
 document.addEventListener("DOMContentLoaded", function () {
   checkUrl();
-});
+}); 
 
-const apiUrls = {
-  geography: "https://opentdb.com/api.php?amount=10&category=22&type=multiple",
-  film: "https://opentdb.com/api.php?amount=10&category=11&type=multiple",
-  sport: "https://opentdb.com/api.php?amount=10&category=21&type=multiple",
-  allgemeinwissen: "https://opentdb.com/api.php?amount=10&category=9&type=multiple",
-};
 
 function checkUrl() {
   var url = window.location.href;
@@ -101,7 +97,7 @@ function checkUrl() {
     });
   }
   
-  // Hilfsfunktion zum Mischen eines Arrays (Fisher-Yates Algorithmus)
+  // Hilfsfunktion zum Mischen eines Arrays 
   function shuffle(array) {
     let currentIndex = array.length, randomIndex;
   
