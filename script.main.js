@@ -40,10 +40,12 @@ function checkUrl() {
   const resultElement = document.getElementById("result");
   const timerElement = document.getElementById("timer");
 
-  if (!timerElement) {
-    console.error("Timer-Element nicht gefunden");
-    return;
-  }
+  //if (!timerElement) {
+   // console.error("Timer-Element nicht gefunden");
+   // return;
+  //}
+
+
 // Funktion zum Starten des Timers
   function startTimer() {
     timerInterval = setInterval(function () {
@@ -60,6 +62,8 @@ function checkUrl() {
     // Sicherstellung, dass der Timer zuerst korrekt aktualisiert wird, bevor er auf 0 gesetzt wird
     timerElement.textContent = `Die Zeit läuft: ${timerSeconds} Sekunden`;
   }
+
+
 // Funktion zum Stoppen des Timers
   function stopTimer() {
     clearInterval(timerInterval);
@@ -68,6 +72,8 @@ function checkUrl() {
   document.getElementById("error-message").addEventListener("click", function () {
   this.style.display = "none";
   });
+
+
 // Funktion zum Abrufen der Quizdaten - Hier beginnt das Spiel
   async function fetchQuizData() {
     try {
@@ -143,7 +149,7 @@ function displayQuiz() {
     timerSeconds = 30;
     stopTimer();
 
-    // Starten Sie den Timer, wenn das Dokument vollständig geladen wurde
+    // Timer wird gestartet, wenn das Dokument vollständig geladen wurde
     startTimer();
   }
 // Funktion zur Überprüfung der Antwort
