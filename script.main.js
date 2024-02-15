@@ -40,11 +40,6 @@ function checkUrl() {
   const resultElement = document.getElementById("result");
   const timerElement = document.getElementById("timer");
 
-  //if (!timerElement) {
-   // console.error("Timer-Element nicht gefunden");
-   // return;
-  //}
-
 
 // Funktion zum Starten des Timers
   function startTimer() {
