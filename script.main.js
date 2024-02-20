@@ -1,10 +1,14 @@
+//Api-Url Daten werden von einer anderen JavaScript Datei abgerufen 
 import {apiUrls} from './api.url.js';
 
+//EventListener wartet bis der DOM vollständig geladen ist, bevor die function checkUrl aufgerufen wird
+//DOM = Programmschnittstelle
 document.addEventListener("DOMContentLoaded", function () {
   checkUrl();
 }); 
 
-
+// Abruf der jeweiligen API-Url, anhand der Url der jeweiligen Kategorie 
+//Bessere Alternative: Anstatt der Kategorie-Url, Abruf der API über bspw. einen Namen, der auf der Website ausgewiesen ist (bessere Dynamik)
 function checkUrl() {
   var url = window.location.href;
   var apiUrl;
@@ -28,13 +32,15 @@ function checkUrl() {
     }
     console.log("API-URL festgelegt: " + apiUrl);
     
-
+// Variablen werden initialisiert, um den Zustand des Quiz zu verfolgen
   let quizData = [];
   let currentQuestion = 0;
   let score = 0;
   let timerSeconds = 30;
   let timerInterval;
 
+  //Konstanten werden erstellt und greifen auf die HTML-Struktur zu. 
+  //DOM - Elemente werden hier abgerufen, die dann später im Code verwendet werden 
   const questionElement = document.getElementById("question");
   const optionsContainer = document.getElementById("options-container");
   const resultElement = document.getElementById("result");
@@ -42,11 +48,13 @@ function checkUrl() {
 
 
 // Funktion zum Starten des Timers
+// Funktion startet den Timer, indem ein Interval setInterval erstellt, welches alle 1000 Milisekunden (1Sek) den Timer aktualisert, bis er gegen 0 läuft
   function startTimer() {
     timerInterval = setInterval(function () {
       timerElement.textContent = `Die Zeit läuft: ${timerSeconds} Sekunden`;
 
-      if (timerSeconds <= 0) {
+      //Timer läuft runter bis 0, dann kommt clearInterval zum Einsatz, stoppt den Timer 
+      if (timerSeconds <= 0) { //timerSeconds speichert die verbleibende Zeit
         clearInterval(timerInterval);
         result();
       } else {
@@ -63,13 +71,14 @@ function checkUrl() {
   function stopTimer() {
     clearInterval(timerInterval);
   }
-  // Event Listener hinzugefügt
+  // Event Listener hinzugefügt um den User mitzuteilen, dass ein Fehler aufgetreten ist -> Spiel lädt nicht
   document.getElementById("error-message").addEventListener("click", function () {
   this.style.display = "none";
   });
 
 
-// Funktion zum Abrufen der Quizdaten - Hier beginnt das Spiel
+// Funktion zum Abrufen der Quizdaten -> Asynchrone Funktion, d.h. JavaScript Code wird weiterhin ausgeführt
+// -> Wenn die Antwort vom Server da ist, wird die Funktion formatQuizData aufgerufen 
   async function fetchQuizData() {
     try {
       const response = await fetch(apiUrl);
@@ -86,7 +95,8 @@ function checkUrl() {
        errorMessageElement.style.display = "block";
     }
   }
-
+// Formatiert die Api Daten in das gewünschte Format: 1 Frage und 4 Antwortmöglichkeiten 
+// Die Antwortmöglichkeiten werden durchgeshuffelt, d.h. die richtige Antwort befindet sich nicht an der selben Position 
   function formatQuizData(apiData) {
     return apiData.map((apiQuestion) => {
       const formattedQuestion = {
@@ -99,11 +109,12 @@ function checkUrl() {
   }
   
   // Hilfsfunktion zum Mischen eines Arrays 
-  function shuffle(array) {
+  // Antwortmöglichkeiten werden durchgemischt 
+  function shuffle(array) { //Array: 4 Antworten 
     let currentIndex = array.length, randomIndex;
   
     while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
+      randomIndex = Math.floor(Math.random() * currentIndex); //Math.floor rundet ab auf ganze Zahlen; Math.random Zahl zwischen 0 und 1
       currentIndex--;
   
       [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
@@ -111,19 +122,7 @@ function checkUrl() {
   
     return array;
   }
-  
-  //function cleanUp(){
 
-
-   // currentQuizData = quizData[currentQuestion];
-    //question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö").replaceAll("&ldquo;The Iron Giant,&rdquo;","The Iron Giant");
-
-   // button = document.createElement("button");
-   // button.textContent = option.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&ntilde;&aacute", "ñá").replaceAll("&aring;", "å").replaceAll("&amp;", "").replaceAll("&ouml;","ö").replaceAll("&oacute;n","ó");
-
-  // }
-
-  // Funktion zum Anzeigen des Quiz
 function displayQuiz() {
   const currentQuizData = quizData[currentQuestion];
   let question = currentQuizData.question.replaceAll("&quot;", '"').replaceAll("&rsquo;", "'").replaceAll("&#039;", "'").replaceAll("&amp;", "").replaceAll("Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch","Llanfairpwll").replaceAll("&ouml;","ö").replaceAll("&ldquo;The Iron Giant,&rdquo;","The Iron Giant");
@@ -182,7 +181,7 @@ function displayQuiz() {
       : `Du hast ${score} von ${quizData.length} Fragen richtig beantwortet.`;
 
     resultElement.textContent = resultText;
-
+ //Hier wird quasi überprüft ob die 10 Spielfragen erreicht wurden, wenn nicht dann wird die function displayquiz aufgerufen und wenn ja dann loadThankYouScree
     if (currentQuestion < quizData.length - 1) {
       currentQuestion++;
       displayQuiz();
